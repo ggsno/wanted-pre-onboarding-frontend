@@ -13,11 +13,11 @@ export default function TodoPage() {
   const [editTodoItem, setEditTodoItem] = useState<TodoProps | null>(null);
 
   const {
-    input: editTodo,
+    input: editTodoInput,
+    setInput: setEditTodoInput,
     onChange: onChangeEditTodo,
     onSubmitCallback: onSubmitCallbackEditTodo,
-    onCancelCallback: onCancelCallbackEditTodo,
-  } = useInput(editTodoItem ? editTodoItem.todo : "");
+  } = useInput("");
 
   const handleSubmitCreateTodo = onSubmitCallbackNewTodo(() => {
     createTodo({ todo: newTodo });
@@ -25,15 +25,13 @@ export default function TodoPage() {
 
   const handleSubmitEditTodo = onSubmitCallbackEditTodo(() => {
     if (!editTodoItem) throw new Error("no edit item");
-    updateTodo({ ...editTodoItem, todo: editTodo });
+    updateTodo({ ...editTodoItem, todo: editTodoInput });
     setEditTodoItem(null);
   });
 
-  const handleCancelEditTodo = onCancelCallbackEditTodo(() => {
-    setEditTodoItem(null);
-  });
-
-  useEffect(() => {}, [editTodoItem]);
+  useEffect(() => {
+    setEditTodoInput(editTodoItem ? editTodoItem.todo : "");
+  }, [editTodoItem]);
 
   return (
     <>
@@ -84,12 +82,12 @@ export default function TodoPage() {
               ) : (
                 <form onSubmit={handleSubmitEditTodo}>
                   <input
-                    value={editTodo}
+                    value={editTodoInput}
                     onChange={onChangeEditTodo}
                     data-testid="modify-input"
                   />
                   <button type="submit">제출</button>
-                  <button type="button" onClick={handleCancelEditTodo}>
+                  <button type="button" onClick={() => setEditTodoItem(null)}>
                     취소
                   </button>
                 </form>

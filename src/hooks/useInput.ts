@@ -15,15 +15,7 @@ const useInput = (initialInput: string) => {
       resetInput();
     };
 
-  const onCancelCallback =
-    (callback: () => void) =>
-    (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-      e.preventDefault();
-      callback();
-      resetInput();
-    };
-
-  return { input, onChange, onSubmitCallback, onCancelCallback };
+  return { input, setInput, onChange, onSubmitCallback };
 };
 
 export default useInput;
