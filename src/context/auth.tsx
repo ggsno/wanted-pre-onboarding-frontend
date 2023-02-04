@@ -7,7 +7,7 @@ import {
   useEffect,
 } from "react";
 import { Navigate } from "react-router-dom";
-import { handleError } from "./error";
+import { handleError } from "../error";
 
 interface SignProps {
   email: string;
