@@ -1,26 +1,62 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
+import { AuthProvider, RequireAuth, useAuth } from "./auth";
+import RootPage from "./routes/root";
+import SignInPage from "./routes/signIn";
+import SignUpPage from "./routes/signUp";
+import TodoPage from "./routes/todo";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <AuthProvider>
+      <h1>Todo app</h1>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<RootPage />} />
+          <Route path="/signin" element={<SignInPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route
+            path="/todo"
+            element={
+              <RequireAuth>
+                <TodoPage />
+              </RequireAuth>
+            }
+          />
+        </Route>
+      </Routes>
+    </AuthProvider>
+  );
+}
+
+function Layout() {
+  return (
+    <div>
+      <AuthStatus />
+      <Outlet />
     </div>
   );
 }
 
-export default App;
+function AuthStatus() {
+  let auth = useAuth();
+  let navigate = useNavigate();
+
+  return (
+    <>
+      {!auth.user ? (
+        <p>You are not logged in.</p>
+      ) : (
+        <p>
+          Welcome {auth.user.email}!{" "}
+          <button
+            onClick={() => {
+              auth.signOut(() => navigate("/signin"));
+            }}
+          >
+            Sign out
+          </button>
+        </p>
+      )}
+    </>
+  );
+}
