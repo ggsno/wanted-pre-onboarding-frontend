@@ -1,4 +1,4 @@
-type StorageKey = "ACCESS_TOKEN";
+type StorageKey = "access_token";
 
 export const storage = {
   get: (key: StorageKey) => localStorage.getItem(key),

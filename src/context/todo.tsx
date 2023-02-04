@@ -24,9 +24,9 @@ export interface TodoProps {
 
 interface TodoContextProps {
   todos: TodoProps[];
-  createTodo: (props: CreateTodoProps, callback: VoidFunction) => void;
-  updateTodo: (props: UpdateTodoProps, callback: VoidFunction) => void;
-  deleteTodo: (props: DeleteTodoProps, callback: VoidFunction) => void;
+  createTodo: (props: CreateTodoProps) => void;
+  updateTodo: (props: UpdateTodoProps) => void;
+  deleteTodo: (props: DeleteTodoProps) => void;
 }
 
 const TodoContext = createContext<TodoContextProps>(null!);
@@ -36,34 +36,22 @@ export function TodoProvider({ children }: { children: ReactNode }) {
 
   const refreshTodos = async () => {
     const response = await fetchGetTodos();
-    setTodos(response.data.data);
+    setTodos(response.data);
   };
 
-  const createTodo: TodoContextProps["createTodo"] = async (
-    props,
-    callback
-  ) => {
+  const createTodo: TodoContextProps["createTodo"] = async (props) => {
     await fetchCreateTodo(props);
     refreshTodos();
-    callback();
   };
 
-  const updateTodo: TodoContextProps["updateTodo"] = async (
-    props,
-    callback
-  ) => {
+  const updateTodo: TodoContextProps["updateTodo"] = async (props) => {
     await fetchUpdateTodo(props);
     refreshTodos();
-    callback();
   };
 
-  const deleteTodo: TodoContextProps["deleteTodo"] = async (
-    props,
-    callback
-  ) => {
+  const deleteTodo: TodoContextProps["deleteTodo"] = async (props) => {
     await fetchDeleteTodo(props);
     refreshTodos();
-    callback();
   };
 
   useEffect(() => {

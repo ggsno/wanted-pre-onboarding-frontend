@@ -3,52 +3,48 @@ import { TodoProps } from "../context/todo";
 import { storage } from "../storage";
 
 export interface CreateTodoProps {
-  todoContent: string;
+  todo: string;
 }
 
 export interface UpdateTodoProps {
-  todoId: number;
-  todoContent: string;
+  id: number;
+  todo: string;
   isCompleted: boolean;
 }
 
 export interface DeleteTodoProps {
-  todoId: number;
+  id: number;
 }
 
-export function fetchCreateTodo({ todoContent }: CreateTodoProps) {
+export function fetchCreateTodo({ todo }: CreateTodoProps) {
   const instance = makeAxiosInstanceWithTokenAuth();
 
-  return instance.post<{ data: TodoProps }>("todos", { todo: todoContent });
+  return instance.post<TodoProps>("todos", { todo });
 }
 
 export function fetchGetTodos() {
   const instance = makeAxiosInstanceWithTokenAuth();
 
-  return instance.get<{ data: TodoProps[] }>("todos");
+  return instance.get<TodoProps[]>("todos");
 }
-export function fetchUpdateTodo({
-  todoId,
-  todoContent,
-  isCompleted,
-}: UpdateTodoProps) {
+export function fetchUpdateTodo({ id, todo, isCompleted }: UpdateTodoProps) {
   const instance = makeAxiosInstanceWithTokenAuth();
 
-  return instance.put<{ data: TodoProps }>(`todos/${todoId}`, {
-    todo: todoContent,
+  return instance.put<TodoProps>(`todos/${id}`, {
+    todo,
     isCompleted,
   });
 }
-export function fetchDeleteTodo({ todoId }: DeleteTodoProps) {
+export function fetchDeleteTodo({ id }: DeleteTodoProps) {
   const instance = makeAxiosInstanceWithTokenAuth();
 
-  return instance.delete(`todos/${todoId}`);
+  return instance.delete(`todos/${id}`);
 }
 
 function makeAxiosInstanceWithTokenAuth() {
-  const token = storage.get("ACCESS_TOKEN");
+  const token = storage.get("access_token");
   // TODO: error handling
-  if (!token) throw new Error("");
+  if (!token) throw new Error("ppap");
 
   const instance = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_URL,

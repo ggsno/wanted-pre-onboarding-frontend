@@ -1,5 +1,6 @@
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
-import { AuthProvider, NoNeedAuth, RequireAuth, useAuth } from "./auth";
+import { AuthProvider, NoNeedAuth, RequireAuth, useAuth } from "./context/auth";
+import { TodoProvider } from "./context/todo";
 import RootPage from "./pages/root";
 import SignInPage from "./pages/signin";
 import SignUpPage from "./pages/signup";
@@ -32,7 +33,9 @@ export default function App() {
             path="/todo"
             element={
               <RequireAuth>
-                <TodoPage />
+                <TodoProvider>
+                  <TodoPage />
+                </TodoProvider>
               </RequireAuth>
             }
           />
