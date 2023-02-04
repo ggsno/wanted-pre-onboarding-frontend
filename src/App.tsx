@@ -1,9 +1,9 @@
 import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
-import { AuthProvider, RequireAuth, useAuth } from "./auth";
-import RootPage from "./routes/root";
-import SignInPage from "./routes/signIn";
-import SignUpPage from "./routes/signUp";
-import TodoPage from "./routes/todo";
+import { AuthProvider, NoNeedAuth, RequireAuth, useAuth } from "./auth";
+import RootPage from "./pages/root";
+import SignInPage from "./pages/signin";
+import SignUpPage from "./pages/signup";
+import TodoPage from "./pages/todo";
 
 export default function App() {
   return (
@@ -12,8 +12,22 @@ export default function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<RootPage />} />
-          <Route path="/signin" element={<SignInPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
+          <Route
+            path="/signin"
+            element={
+              <NoNeedAuth>
+                <SignInPage />
+              </NoNeedAuth>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <NoNeedAuth>
+                <SignUpPage />
+              </NoNeedAuth>
+            }
+          />
           <Route
             path="/todo"
             element={
@@ -43,11 +57,11 @@ function AuthStatus() {
 
   return (
     <>
-      {!auth.user ? (
+      {!auth.hasAuth ? (
         <p>You are not logged in.</p>
       ) : (
         <p>
-          Welcome {auth.user.email}!{" "}
+          Welcome !
           <button
             onClick={() => {
               auth.signOut(() => navigate("/signin"));
