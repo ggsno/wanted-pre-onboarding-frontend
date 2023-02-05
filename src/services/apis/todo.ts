@@ -1,22 +1,14 @@
 import axios from "axios";
-import { TodoProps } from "../context/todo";
-import { storage } from "../storage";
+import { handleError } from "../../error";
+import { storage } from "../../storage";
+import { TodoProps } from "../../types/todo";
+import {
+  CreateTodoRequestProps,
+  UpdateTodoRequestProps,
+  DeleteTodoRequestProps,
+} from "../model/todoSchema";
 
-export interface CreateTodoProps {
-  todo: string;
-}
-
-export interface UpdateTodoProps {
-  id: number;
-  todo: string;
-  isCompleted: boolean;
-}
-
-export interface DeleteTodoProps {
-  id: number;
-}
-
-export function fetchCreateTodo({ todo }: CreateTodoProps) {
+export function fetchCreateTodo({ todo }: CreateTodoRequestProps) {
   const instance = makeAxiosInstanceWithTokenAuth();
 
   return instance.post<TodoProps>("todos", { todo });
@@ -27,7 +19,11 @@ export function fetchGetTodos() {
 
   return instance.get<TodoProps[]>("todos");
 }
-export function fetchUpdateTodo({ id, todo, isCompleted }: UpdateTodoProps) {
+export function fetchUpdateTodo({
+  id,
+  todo,
+  isCompleted,
+}: UpdateTodoRequestProps) {
   const instance = makeAxiosInstanceWithTokenAuth();
 
   return instance.put<TodoProps>(`todos/${id}`, {
@@ -35,7 +31,7 @@ export function fetchUpdateTodo({ id, todo, isCompleted }: UpdateTodoProps) {
     isCompleted,
   });
 }
-export function fetchDeleteTodo({ id }: DeleteTodoProps) {
+export function fetchDeleteTodo({ id }: DeleteTodoRequestProps) {
   const instance = makeAxiosInstanceWithTokenAuth();
 
   return instance.delete(`todos/${id}`);
@@ -43,8 +39,10 @@ export function fetchDeleteTodo({ id }: DeleteTodoProps) {
 
 function makeAxiosInstanceWithTokenAuth() {
   const token = storage.get("access_token");
-  // TODO: error handling
-  if (!token) throw new Error("ppap");
+
+  if (!token) {
+    handleError(new Error("no token"));
+  }
 
   const instance = axios.create({
     baseURL: process.env.REACT_APP_BACKEND_URL,

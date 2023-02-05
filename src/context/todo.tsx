@@ -6,28 +6,12 @@ import {
   useEffect,
 } from "react";
 import {
-  CreateTodoProps,
-  UpdateTodoProps,
-  DeleteTodoProps,
   fetchCreateTodo,
   fetchDeleteTodo,
   fetchGetTodos,
   fetchUpdateTodo,
-} from "../apis/todo";
-
-export interface TodoProps {
-  id: number;
-  todo: string;
-  isCompleted: boolean;
-  userId: number;
-}
-
-interface TodoContextProps {
-  todos: TodoProps[];
-  createTodo: (props: CreateTodoProps) => void;
-  updateTodo: (props: UpdateTodoProps) => void;
-  deleteTodo: (props: DeleteTodoProps) => void;
-}
+} from "../services/apis/todo";
+import { TodoContextProps, TodoProps } from "../types/todo";
 
 const TodoContext = createContext<TodoContextProps>(null!);
 

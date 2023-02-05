@@ -1,5 +1,6 @@
-import { Routes, Route, useNavigate, Outlet } from "react-router-dom";
-import { AuthProvider, NoNeedAuth, RequireAuth, useAuth } from "./context/auth";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Layout from "./components/Layout";
+import { AuthProvider, useAuth } from "./context/auth";
 import { TodoProvider } from "./context/todo";
 import RootPage from "./pages/root";
 import SignInPage from "./pages/signin";
@@ -9,7 +10,6 @@ import TodoPage from "./pages/todo";
 export default function App() {
   return (
     <AuthProvider>
-      <h1>Todo app</h1>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<RootPage />} />
@@ -45,35 +45,12 @@ export default function App() {
   );
 }
 
-function Layout() {
-  return (
-    <div>
-      <AuthStatus />
-      <Outlet />
-    </div>
-  );
+function RequireAuth({ children }: { children: JSX.Element }) {
+  const auth = useAuth();
+  return <>{auth.hasAuth ? children : <Navigate to="/signin" replace />}</>;
 }
 
-function AuthStatus() {
-  let auth = useAuth();
-  let navigate = useNavigate();
-
-  return (
-    <>
-      {!auth.hasAuth ? (
-        <p>You are not logged in.</p>
-      ) : (
-        <p>
-          Welcome !
-          <button
-            onClick={() => {
-              auth.signOut(() => navigate("/signin"));
-            }}
-          >
-            Sign out
-          </button>
-        </p>
-      )}
-    </>
-  );
+function NoNeedAuth({ children }: { children: JSX.Element }) {
+  const auth = useAuth();
+  return <>{auth.hasAuth ? <Navigate to="/todo" replace /> : children}</>;
 }

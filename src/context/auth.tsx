@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   createContext,
   ReactNode,
@@ -6,62 +5,30 @@ import {
   useState,
   useEffect,
 } from "react";
-import { Navigate } from "react-router-dom";
 import { handleError } from "../error";
-
-interface SignProps {
-  email: string;
-  password: string;
-}
-
-interface AuthContextProps {
-  hasAuth: boolean;
-  signUp: (props: SignProps, callback: VoidFunction) => void;
-  signIn: (props: SignProps, callback: VoidFunction) => void;
-  signOut: (callback: VoidFunction) => void;
-}
+import { fetchSignIn, fetchSignup } from "../services/apis/auth";
+import { storage } from "../storage";
+import { AuthContextProps } from "../types/auth";
 
 const AuthContext = createContext<AuthContextProps>(null!);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [hasAuth, setHasAuth] = useState(false);
 
-  const setLoginStatus = (access_token: string) => {
-    localStorage.setItem("access_token", access_token);
-    setHasAuth(true);
-  };
-
-  const resetLoginStatus = () => {
-    localStorage.removeItem("access_token");
-    setHasAuth(false);
-  };
-
-  const signUp: AuthContextProps["signUp"] = async (
-    { email, password },
-    callback
-  ) => {
+  const signUp: AuthContextProps["signUp"] = async (props, callback) => {
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/auth/signup`,
-        { email, password }
-      );
-      setLoginStatus(res.data.access_token);
+      await fetchSignup(props);
       callback();
     } catch (err) {
       handleError(err);
     }
   };
 
-  const signIn: AuthContextProps["signIn"] = async (
-    { email, password },
-    callback
-  ) => {
+  const signIn: AuthContextProps["signIn"] = async (props, callback) => {
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/auth/signin`,
-        { email, password }
-      );
-      setLoginStatus(res.data.access_token);
+      const res = await fetchSignIn(props);
+      storage.set("access_token", res.data.access_token);
+      setHasAuth(true);
       callback();
     } catch (err) {
       handleError(err);
@@ -69,12 +36,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut: AuthContextProps["signOut"] = (callback) => {
-    resetLoginStatus();
+    storage.remove("access_token");
+    setHasAuth(false);
     callback();
   };
 
   useEffect(() => {
-    setHasAuth(localStorage.getItem("access_token") ? true : false);
+    setHasAuth(storage.get("access_token") ? true : false);
   }, []);
 
   return (
@@ -86,14 +54,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth() {
   return useContext(AuthContext);
-}
-
-export function RequireAuth({ children }: { children: JSX.Element }) {
-  const auth = useAuth();
-  return <>{auth.hasAuth ? children : <Navigate to="/signin" replace />}</>;
-}
-
-export function NoNeedAuth({ children }: { children: JSX.Element }) {
-  const auth = useAuth();
-  return <>{auth.hasAuth ? <Navigate to="/todo" replace /> : children}</>;
 }

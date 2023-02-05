@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 
-const useInput = (initialInput: string) => {
-  const [input, setInput] = useState(initialInput);
+const useInput = (initialValue: string) => {
+  const [value, setValue] = useState(initialValue);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setInput(e.target.value);
+    setValue(e.target.value);
 
-  const resetInput = () => setInput(initialInput);
+  const resetInput = () => setValue(initialValue);
 
   const onSubmitCallback =
     (callback: () => void) => (e: React.FormEvent<HTMLFormElement>) => {
@@ -15,7 +15,7 @@ const useInput = (initialInput: string) => {
       resetInput();
     };
 
-  return { input, setInput, onChange, onSubmitCallback };
+  return { value, setValue, onChange, onSubmitCallback };
 };
 
 export default useInput;
