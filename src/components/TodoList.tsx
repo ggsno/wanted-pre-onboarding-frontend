@@ -53,7 +53,13 @@ const TodoItem = (props: {
             }}
             className="w-auto"
           />
-          <p className="w-48 truncate">{todo}</p>
+          <p
+            className={`w-48 truncate ${
+              isCompleted ? "line-through text-slate-300" : null
+            }`}
+          >
+            {todo}
+          </p>
         </label>
         <div className="flex">
           <button
