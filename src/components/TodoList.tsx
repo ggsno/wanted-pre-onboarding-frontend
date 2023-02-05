@@ -94,7 +94,7 @@ const TodoEditForm = (props: {
 
   useEffect(() => {
     setValue(editTodoItem ? editTodoItem.todo : "");
-  }, [editTodoItem]);
+  }, [editTodoItem, setValue]);
 
   return (
     <form onSubmit={handleSubmitEditTodo}>
