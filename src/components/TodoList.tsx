@@ -106,12 +106,13 @@ const TodoEditForm = (props: {
           className={"w-full"}
         />
         <div className="flex">
-          <button type="submit" className="w-12">
+          <button type="submit" data-testid="submit-button" className="w-12">
             제출
           </button>
           <button
             type="button"
             onClick={() => setEditTodoItem(null)}
+            data-testid="cancel-button"
             className="w-12"
           >
             취소
