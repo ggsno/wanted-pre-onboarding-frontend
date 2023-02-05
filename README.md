@@ -1,10 +1,10 @@
 # Todo app
-원티드 프리온보딩 프론트엔드 - 선발 과제
+원티드 프리온보딩 프론트엔드 - 선발 과제 ([과제 설명 레포지토리 및 백엔드 링크](https://github.com/walking-sunset/selection-task))
 
 ## 실행 방법
 - 폴더 최상단에 .env 파일 생성 후 백엔드 api 주소를 입력 (.env.sample 참고)
 - ```yarn start```
-- 
+
 ## 배포 링크
 http://todo-app-wanted.s3-website.ap-northeast-2.amazonaws.com
 
