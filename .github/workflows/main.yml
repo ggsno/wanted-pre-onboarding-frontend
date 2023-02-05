@@ -12,8 +12,7 @@ jobs:
       - uses: actions/checkout@main
       - run: npm ci
       - name: Generate Environment Variables File for Production
-        run: |
-          echo "REACT_APP_DOMAIN=$REACT_APP_BACKEND_URL" >> .env
+        run: echo "REACT_APP_BACKEND_URL=$REACT_APP_BACKEND_URL" >> .env
         env:
           REACT_APP_BACKEND_URL: ${{ secrets.REACT_APP_BACKEND_URL }}
       - run: npm run build
